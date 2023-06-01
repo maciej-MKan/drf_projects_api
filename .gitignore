@@ -1,7 +1,20 @@
 db.sqlite3
 
-# Byte-compiled / optimized / DLL files
+# Virtual environment
+venv/
+.env
+.envs/dev/
+.envs/
+
+# PyCharm
+.idea/
+
+# Project dependencies
 __pycache__/
+*.pyc
+*.pyo
+
+# Byte-compiled / optimized / DLL files
 *.py[cod]
 
 # C extensions
