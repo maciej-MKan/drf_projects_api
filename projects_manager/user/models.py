@@ -21,6 +21,7 @@ class ProjectUser(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(_("email address"), unique=True)
+    password = models.CharField(max_length=500, blank=True)
     age = models.IntegerField()
     gender = models.CharField(max_length=10, choices=GENDERS)
     phone_number = models.CharField(max_length=20)
