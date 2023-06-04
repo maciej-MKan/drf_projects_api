@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'projects_manager.user',
     'projects_manager.project',
+    'projects_manager.comment',
 ]
 
 REST_FRAMEWORK = {

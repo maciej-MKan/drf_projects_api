@@ -5,12 +5,11 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import ProjectUser
-from ..project.models import Project
 
 
 class UserSerializer(serializers.ModelSerializer):
-    projects = serializers.PrimaryKeyRelatedField(many=True, queryset=Project.objects.all())
-    password = serializers.CharField(write_only=True)
+    projects = serializers.SerializerMethodField()
+    password = serializers.CharField(write_only=True, allow_blank=True)
     email = serializers.CharField(validators=[validate_email])
     first_name = serializers.CharField(validators=[
         RegexValidator(
@@ -41,6 +40,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         fields = ['id', 'first_name', 'last_name', 'age', 'gender', 'email', 'password', 'phone_number', 'projects']
+
+    def get_projects(self, obj):
+        from ..project.serializers import ProjectSerializer
+        serializer = ProjectSerializer(obj.projects, many=True)
+        return serializer.data
 
     def to_representation(self, instance):
         request = self.context['request']
@@ -81,3 +85,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     pass
+
+
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectUser
+        fields = ['id', 'first_name', 'last_name']

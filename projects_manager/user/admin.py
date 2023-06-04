@@ -25,7 +25,7 @@ class ProjectUserAdmin(UserAdmin):
             "classes": ("wide",),
             "fields": (
                 "email", "password1", "password2", "first_name", "last_name", "age", "gender", "phone_number",
-                "is_staff", "is_active", "projects", "user_permissions"
+                "is_staff", "is_active", "user_permissions"
             )}
          ),
     )
