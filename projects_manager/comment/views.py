@@ -1,7 +1,7 @@
 from rest_framework import permissions, viewsets
 
 from projects_manager.comment.models import Comment
-from projects_manager.comment.serializers import CommentSerializer
+from projects_manager.comment.serializers import CommentSerializer, CommentModifySerializer
 
 
 # Create your views here.
@@ -20,8 +20,11 @@ class SomePermission(permissions.BasePermission):  # ToDo: Better name
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all().order_by('-start_date')
+    queryset = Comment.objects.all().order_by('-timestamp')
     permission_classes = [SomePermission]
 
     def get_serializer_class(self):
-        return CommentSerializer
+        serializer = CommentModifySerializer
+        if self.request.method in ['GET', ]:
+            serializer = CommentSerializer
+        return serializer

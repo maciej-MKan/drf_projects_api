@@ -7,6 +7,6 @@ from projects_manager.comment.models import Comment
 @admin.register(Comment)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ['project', 'user', 'comment', 'timestamp']
-    list_filter = ['timestamp']
+    list_filter = ['project', 'user']
     search_fields = ['project', 'user']
 
