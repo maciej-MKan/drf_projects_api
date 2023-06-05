@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email, RegexValidator, MinValueValidator, MaxValueValidator
@@ -7,39 +8,31 @@ from rest_framework.exceptions import ValidationError
 from .models import ProjectUser
 
 
+def name_validator(name):
+    pattern = r'^[A-Za-z]+$'
+    if not re.match(pattern, name):
+        raise ValidationError('Must contain only letters.')
+
+
+def age_validator(age):
+    if age < 18:
+        raise ValidationError('Age must be at least 18.')
+    if age > 100:
+        raise ValidationError('Age cannot exceed 100.')
+
+
+def phone_validator(number):
+    pattern = r'^(?:\+\d{1,3}\s?)?\d{9}$'
+    if not re.match(pattern, number):
+        raise ValidationError('Phone number must be a valid phone number with optional country code.')
+
+
 class UserSerializer(serializers.ModelSerializer):
     projects = serializers.SerializerMethodField()
-    password = serializers.CharField(write_only=True, allow_blank=True)
-    email = serializers.CharField(validators=[validate_email])
-    first_name = serializers.CharField(validators=[
-        RegexValidator(
-            regex=r'^[A-Za-z]+$',
-            message='First name must contain only letters.'
-        )
-    ])
-
-    last_name = serializers.CharField(validators=[
-        RegexValidator(
-            regex=r'^[A-Za-z]+$',
-            message='Last name must contain only letters.'
-        )
-    ])
-
-    age = serializers.IntegerField(validators=[
-        MinValueValidator(18, message='Age must be at least 18.'),
-        MaxValueValidator(100, message='Age cannot exceed 100.')
-    ])
-
-    phone_number = serializers.CharField(validators=[
-        RegexValidator(
-            regex=r'^(?:\+\d{1,3}\s?)?\d{9}$',
-            message='Phone number must be a valid phone number with optional country code.'
-        )
-    ])
 
     class Meta:
         model = ProjectUser
-        fields = ['id', 'first_name', 'last_name', 'age', 'gender', 'email', 'password', 'phone_number', 'projects']
+        fields = ['id', 'first_name', 'last_name', 'age', 'gender', 'email', 'phone_number', 'projects']
 
     def get_projects(self, obj):
         from ..project.serializers import ProjectSerializer
@@ -61,6 +54,32 @@ class UserSerializer(serializers.ModelSerializer):
             }
         return super().to_representation(instance)
 
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, allow_blank=False, validators=[validate_password])
+    email = serializers.CharField(validators=[validate_email])
+    first_name = serializers.CharField(validators=[name_validator])
+    last_name = serializers.CharField(validators=[name_validator])
+    age = serializers.IntegerField(validators=[age_validator])
+    phone_number = serializers.CharField(validators=[phone_validator])
+
+    class Meta:
+        model = ProjectUser
+        fields = ['first_name', 'last_name', 'age', 'gender', 'email', 'password', 'phone_number']
+
+
+class UserModifySerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, allow_blank=True)
+    email = serializers.CharField(validators=[validate_email])
+    first_name = serializers.CharField(validators=[name_validator])
+    last_name = serializers.CharField(validators=[name_validator])
+    age = serializers.IntegerField(validators=[age_validator])
+    phone_number = serializers.CharField(validators=[phone_validator])
+
+    class Meta:
+        model = ProjectUser
+        fields = ['first_name', 'last_name', 'age', 'gender', 'email', 'password', 'phone_number']
+
     def update(self, instance, validated_data):
 
         if validated_data.get('password', None):
@@ -73,18 +92,6 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['password'] = instance.password
 
         return super().update(instance, validated_data)
-
-    def create(self, validated_data):
-        try:
-            validate_password(validated_data['password'])
-        except ValidationError as e:
-            raise serializers.ValidationError({'password': e.detail})
-
-        return super().create(validated_data)
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    pass
 
 
 class UserNameSerializer(serializers.ModelSerializer):

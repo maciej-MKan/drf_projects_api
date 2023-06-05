@@ -22,7 +22,6 @@ class ProjectUser(AbstractUser):
     age = models.IntegerField()
     gender = models.CharField(max_length=10, choices=GENDERS)
     phone_number = models.CharField(max_length=20)
-    # projects = models.ManyToManyField("project.Project", blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

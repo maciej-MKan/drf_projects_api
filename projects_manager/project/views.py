@@ -37,6 +37,4 @@ class ProjectViewSet(viewsets.ModelViewSet):
             'POST': ProjectCreateSerializer,
             'DELETE': ProjectDeleteSerializer
         }
-        serializer = method_serializer_map.get(self.request.method, ProjectModifySerializer)
-        print(serializer)
-        return serializer
+        return method_serializer_map.get(self.request.method, ProjectModifySerializer)

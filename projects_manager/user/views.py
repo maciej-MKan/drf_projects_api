@@ -1,21 +1,26 @@
 from rest_framework import permissions, viewsets
 
 from projects_manager.user.models import ProjectUser
-from projects_manager.user.serializers import UserSerializer, UserUpdateSerializer
+from projects_manager.user.serializers import UserSerializer, UserModifySerializer, UserCreateSerializer
 
 
 class UserSelfDataPermission(permissions.BasePermission):
-    message = 'User can modify self data only'
+
+    def __init__(self):
+        self.message = 'You can modify self data only'
 
     def has_permission(self, request, view):
+        if request.method == "POST":
+            return True
         if request.user.is_authenticated:
             return True
         return False
 
     def has_object_permission(self, request, view, obj):
         method = request.method
-        if method == 'GET' or request.user.is_superuser:
-            return True
+        if (method == 'DELETE') and not request.user.is_superuser:
+            self.message = "Only admin can delete users"
+            return False
         if obj == request.user:
             return True
         return False
@@ -29,8 +34,9 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [UserSelfDataPermission]
 
     def get_serializer_class(self):
-        serializer = UserSerializer
-        if self.request.method in ['PUT', 'PATCH']:
-            serializer = UserUpdateSerializer
-        print(serializer)
-        return UserSerializer
+        request_serializer_map = {
+            'POST': UserCreateSerializer,
+            'PUT': UserModifySerializer,
+            'PATCH': UserModifySerializer
+        }
+        return request_serializer_map.get(self.request.method, UserSerializer)

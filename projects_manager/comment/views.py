@@ -5,9 +5,6 @@ from projects_manager.comment.serializers import CommentSerializer, CommentModif
 from projects_manager.project.models import Project
 
 
-# Create your views here.
-
-
 class CommentAccessPermission(permissions.BasePermission):
 
     def __init__(self):
