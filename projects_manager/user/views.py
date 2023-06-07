@@ -18,6 +18,8 @@ class UserSelfDataPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         method = request.method
+        if request.method == "POST":
+            return True
         if (method == 'DELETE') and not request.user.is_superuser:
             self.message = "Only admin can delete users"
             return False
@@ -30,6 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
         API endpoint that allows users to be viewed or edited.
         """
+
     queryset = ProjectUser.objects.all().order_by('-date_joined')
     permission_classes = [UserSelfDataPermission]
 

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
+from projects_manager.auth_view import AuthToken
 from projects_manager.comment.views import CommentViewSet
 from projects_manager.project.views import ProjectViewSet
 from projects_manager.user.views import UserViewSet
@@ -30,5 +31,6 @@ router.register(r'comments', CommentViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('login/', AuthToken.as_view())
 ]

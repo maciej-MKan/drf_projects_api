@@ -1,9 +1,11 @@
 import re
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
-from django.core.validators import validate_email, RegexValidator, MinValueValidator, MaxValueValidator
-from rest_framework import serializers
+from django.core.validators import validate_email
+from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from .models import ProjectUser
 
@@ -25,6 +27,13 @@ def phone_validator(number):
     pattern = r'^(?:\+\d{1,3}\s?)?\d{9}$'
     if not re.match(pattern, number):
         raise ValidationError('Phone number must be a valid phone number with optional country code.')
+
+
+def custom_password_validator(value):
+    try:
+        validate_password(value)
+    except ValidationError:
+        raise ValidationError('You must type beater password')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -56,16 +65,30 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, allow_blank=False, validators=[validate_password])
-    email = serializers.CharField(validators=[validate_email])
+    password = serializers.CharField(
+        max_length=100,
+        write_only=True,
+        allow_blank=False,
+        validators=[custom_password_validator]
+    )
+    email = serializers.CharField(max_length=30, validators=[validate_email])
     first_name = serializers.CharField(validators=[name_validator])
     last_name = serializers.CharField(validators=[name_validator])
     age = serializers.IntegerField(validators=[age_validator])
-    phone_number = serializers.CharField(validators=[phone_validator])
+    phone_number = serializers.CharField(validators=[phone_validator], allow_blank=True)
 
     class Meta:
         model = ProjectUser
         fields = ['first_name', 'last_name', 'age', 'gender', 'email', 'password', 'phone_number']
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)
+
+    def handle_exception(self, exc):
+        if isinstance(exc, serializers.ValidationError):
+            return Response(exc.detail, status=status.HTTP_400_BAD_REQUEST)
+        return super().handle_exception(exc)
 
 
 class UserModifySerializer(serializers.ModelSerializer):
@@ -87,7 +110,7 @@ class UserModifySerializer(serializers.ModelSerializer):
                 validate_password(validated_data['password'])
                 validated_data['password'] = make_password(validated_data['password'])
             except ValidationError as e:
-                raise serializers.ValidationError({'password': e.detail})
+                raise ValidationError({'password': e.detail})
         else:
             validated_data['password'] = instance.password
 
