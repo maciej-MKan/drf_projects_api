@@ -27,7 +27,7 @@ SECRET_KEY = os.environ['SECRET']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = dev_env
 
-ALLOWED_HOSTS = ["https://mkan-manager.herokuapp.com"]
+ALLOWED_HOSTS = ["mkan-manager.herokuapp.com"]
 
 # Application definition
 
@@ -148,12 +148,12 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mkan-manager.herokuapp.com/"
+    "mkan-manager.herokuapp.com"
 ]
 
 
 CORS_ORIGIN_WHITELIST = (
-  "https://mkan-manager.herokuapp.com"
+  "mkan-manager.herokuapp.com"
 )
 
 CORS_ALLOW_HEADERS = [
