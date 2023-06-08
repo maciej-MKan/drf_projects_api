@@ -27,7 +27,7 @@ SECRET_KEY = os.environ['SECRET']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = dev_env
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://mkan-manager.herokuapp.com"]
 
 # Application definition
 
@@ -147,11 +147,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://manager-drf-api.herokuapp.com",
     "https://mkan-manager.herokuapp.com"
 ]
+
+
+CORS_ORIGIN_WHITELIST = (
+  "https://mkan-manager.herokuapp.com"
+)
 
 CORS_ALLOW_HEADERS = [
     'accept',
