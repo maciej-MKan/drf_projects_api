@@ -25,7 +25,7 @@ dev_env = load_dotenv('.envs/dev/db.env')
 SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = dev_env
+DEBUG = True
 
 # Application definition
 
@@ -63,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django_cookies_samesite.middleware.CookiesSameSite'
+    # 'django_cookies_samesite.middleware.CookiesSameSite'
 ]
 
 ROOT_URLCONF = 'projects_manager.urls'
@@ -143,7 +143,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = [
     # 'mkan-manager.herokuapp.com',
-    'manager-drf-api.herokuapp.com'
+    'manager-drf-api.herokuapp.com',
+    '127.0.0.1'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
@@ -152,12 +153,14 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     'https://mkan-manager.herokuapp.com',
-    'https://manager-drf-api.herokuapp.com'
+    # 'https://manager-drf-api.herokuapp.com'
+    'localhost:3000'
 ]
 
 CORS_ORIGIN_WHITELIST = (
     'https://mkan-manager.herokuapp.com',
-    'https://manager-drf-api.herokuapp.com'
+    # 'https://manager-drf-api.herokuapp.com'
+    'localhost:3000'
 )
 
 CORS_ALLOW_HEADERS = [
