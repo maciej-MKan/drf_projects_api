@@ -143,12 +143,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mkan-manager.herokuapp.com"
+    "https://mkan-manager.herokuapp.com/"
 ]
 
 
@@ -156,7 +156,7 @@ CORS_ORIGIN_WHITELIST = (
   "https://mkan-manager.herokuapp.com"
 )
 
-CORS_ALLOW_HEADERS = (
+CORS_ALLOW_HEADERS = [
     'accept',
     'authorization',
     'content-type',
@@ -164,13 +164,13 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
     'www-authenticate'
-)
+]
 
-CORS_ALLOW_METHODS = (
+CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
     "OPTIONS",
     "PATCH",
     "POST",
     "PUT",
-)
+]
