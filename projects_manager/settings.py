@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django_cookies_samesite.middleware.CookiesSameSite'
 ]
 
 ROOT_URLCONF = 'projects_manager.urls'
