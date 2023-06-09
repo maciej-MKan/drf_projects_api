@@ -142,7 +142,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = [
-    # 'mkan-manager.herokuapp.com',
     'manager-drf-api.herokuapp.com',
     '127.0.0.1'
 ]
@@ -153,14 +152,12 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     'https://mkan-manager.herokuapp.com',
-    # 'https://manager-drf-api.herokuapp.com'
-    'localhost:3000'
+    'http://localhost:3000'
 ]
 
 CORS_ORIGIN_WHITELIST = (
     'https://mkan-manager.herokuapp.com',
-    # 'https://manager-drf-api.herokuapp.com'
-    'localhost:3000'
+    'http://localhost:3000'
 )
 
 CORS_ALLOW_HEADERS = [

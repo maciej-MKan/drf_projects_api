@@ -8,7 +8,9 @@ class Project(models.Model):
     STATUS = (
         ("NEW", "NEW"),
         ("PENDING", "In pending"),
+        ("IN_PENDING", "In pending"),
         ("PROGRESS", "In progress"),
+        ("IN_PROGRESS", "In progress"),
         ("COMPLETED", "Completed"),
     )
 
