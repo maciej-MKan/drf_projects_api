@@ -25,7 +25,7 @@ dev_env = load_dotenv('.envs/dev/db.env')
 SECRET_KEY = os.environ['SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = dev_env
 
 # Application definition
 
